@@ -1,0 +1,185 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+
+  /* background-color: #f5f5f5; */
+}
+
+/* Apply general styles to the table */
+.MuiTable-root {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: #fff;
+  font-family:'Gill Sans MT';
+}
+
+/* Style the table header */
+.MuiTableHead-root {
+  background-color: #1976d2; /* Blue header */
+}
+
+.MuiTableHead-root .MuiTableCell-root {
+  color: black !important;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Style the table rows */
+.MuiTableRow-root {
+  transition: background-color 0.3s ease-in-out;
+}
+
+.MuiTableRow-root:nth-of-type(odd) {
+  background-color: #f5f5f5; /* Light gray for alternate rows */
+}
+
+.MuiTableRow-root:hover {
+  background-color: #e3f2fd; /* Light blue on hover */
+}
+
+/* Style the table cells */
+.MuiTableCell-root {
+  padding: 12px;
+  font-size: 14px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Center align 'Recovered' column */
+.MuiTableCell-root:last-child {
+  text-align: center;
+}
+
+/* Paper container styles */
+.MuiPaper-root {
+  padding: 20px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 10px;
+  
+}
+
+/* Header Styling */
+h2 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffcc00; /* Gold color */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #ff416c, #ff4b2b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Flex container to align elements */
+.filter-group-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* LLM Filter - Left Side */
+.llm-section {
+  flex: 1;
+  text-align: left;
+}
+
+/* Show Group By - Center */
+.group-by-section {
+  flex: 1;
+  text-align: center;
+}
+
+/* Apply Filter - Right Side */
+.filter-section {
+  flex: 1;
+  text-align: right;
+}
+
+/* Input Styling */
+.filter-input,
+.query-input {
+  width: 100%;
+  max-width: 250px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: black;
+  color: white;
+}
+
+/* Button Styling */
+button {
+  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+/* Button Hover Effect */
+button:hover {
+  background: linear-gradient(to right, #ff6a4d, #ff5733);
+  transform: scale(1.05);
+  box-shadow: 0px 4px 10px rgba(255, 75, 43, 0.5);
+}
+
+/* Checkbox Styling */
+.checkbox-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  background: #ecf0f1;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Table Section */
+.table-container {
+  margin-top: 20px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+  background-color: #2980b9;
+  color: white;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+}
+
+.message {
+  color: green;
+  font-weight: bold;
+}
+
