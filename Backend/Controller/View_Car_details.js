@@ -3,7 +3,7 @@ const { Sequelize } = require("sequelize");
 
 exports.addcardetails=async(req,res)=>{
     try {
-        const theftdetails=car.create(req.body);
+        const theftdetails= await car.create(req.body);
         res.status(200).json({message:"Theft Details of car added",data:theftdetails});
     }
     catch(err)
@@ -12,15 +12,17 @@ exports.addcardetails=async(req,res)=>{
     }
 }
 
-exports.viewtheftdetails=async(req,res)=>{
-    try{
-        const details = await car.findAll();
+exports.viewtheftdetails = async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+        const offset = (page - 1) * limit;
+        const details = await car.findAll({ limit: parseInt(limit), offset: parseInt(offset) });
         res.json(details);
+    } catch (err) {
+        res.status(500).json({ error: "Data can't be fetched" });
     }
-    catch(err){
-        res.status(500).json({error:"Data can't be fetched"});
-    }
-}
+};
+
 
 exports.filterdata=async (req, res) => {
     try {
@@ -33,7 +35,7 @@ exports.filterdata=async (req, res) => {
         const results = await car.findAll({ where: whereClause });
         res.json(results);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: "Data can't be filtered"});
     }
 }
 

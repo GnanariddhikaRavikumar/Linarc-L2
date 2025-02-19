@@ -8,42 +8,41 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-import { TextField } from "@mui/material";
-
-
+// require('dotenv').config();
 
 function TheftDetailsTable() {
   const [theftDetails, setTheftDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState({});
   const [filter,setfilterdata] = useState([]);
   const [query, setQuery] = useState();
   const [querydata,setquerydata]=useState("");
   const [message, setMessage] = useState(""); 
-
-
-  // physcial filter
-  const [columnValues, setColumnValues] = useState([]);  // To hold values of selected column
-  const [selectedColumn, setSelectedColumn] = useState('');  // To hold the selected column name
+  const [columnValues, setColumnValues] = useState([]); 
+  const [selectedColumn, setSelectedColumn] = useState(''); 
   const [selectedValue, setSelectedValue] = useState(''); 
+  
   useEffect(() => {
     if (querydata) {
-      setfilterdata(querydata); // Automatically set filter input
+      setfilterdata(querydata); 
     }
-  }, [querydata]); // Runs whenever queryVal updates
+  }, [querydata]); 
 
   useEffect(() => {
     if (selectedColumn) {
       const fetchColumnValues = async () => {
-        const response = await fetch(`http://localhost:3002/api/fieldvalue?column=${selectedColumn}`); // Example API to get column values
+        const response = await fetch(`http://localhost:3002/api/fieldvalue?column=${selectedColumn}`); 
         const data = await response.json();
         setColumnValues(data);
       };
       fetchColumnValues();
     }
   }, [selectedColumn]);
+
+  useEffect(() => {
+    fetchData(); 
+  }, []);
 
   const handleSecondApiCall = async () => {
     try{
@@ -59,7 +58,12 @@ function TheftDetailsTable() {
       console.log(err);
     }
   }
-  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC1BLXHnbZuXzVxnB1SjXXCehW7RjEjVhs";
+  
+  const API_KEY = import.meta.env.VITE_API_KEY;
+  const API_URL = import.meta.env.VITE_API_URL;
+  const url = `${API_URL}?key=${API_KEY}`;
+  
+  
   const tsvData = [
     "Case_ID",
     "Theft_Date",
@@ -96,10 +100,6 @@ function TheftDetailsTable() {
     "Is_Recovered",
   ];
 
-  useEffect(() => {
-    fetchData(); // Load default data on mount
-  }, []);
-
   const fetchData = async (groupedColumns = []) => {
     try {
       setLoading(true);
@@ -127,7 +127,6 @@ function TheftDetailsTable() {
     setfilterdata(event.target.value);
   };
 
-  // Handle checkbox selection
   const handleCheckboxChange = (column) => {
     setSelectedColumns((prev) => ({
       ...prev,
@@ -135,12 +134,11 @@ function TheftDetailsTable() {
     }));
   };
 
-  // Handle Group By button click - send selected columns to backend
   const handleGroupBy = () => {
     let selected = Object.keys(selectedColumns).filter((col) => selectedColumns[col]);
   
     if (selected.length === 0) {
-      selected = ["case_ID"]; // Default grouping column
+      selected = ["case_ID"]; 
     }
   
     fetchData(selected);
@@ -154,7 +152,6 @@ function TheftDetailsTable() {
   
     setError(null);
   
-    // Convert filter string (e.g., "Car_Model=Kwid,Color=Blue") to query params
     const queryParams = filter
       .split(",")
       .map((param) => param.trim().replace(/\s/g, ""))
@@ -192,12 +189,10 @@ function TheftDetailsTable() {
         var obj = JSON.parse(value);
         console.log(obj);
 
-        var queryVal ;
-
-        for(var key in obj){
-          queryVal = key + "=" + obj[key]+",";
-        }
-        queryVal = queryVal.slice(0,-1);
+        var queryVal = Object.entries(obj)
+          .map(([key, value]) => `${key}=${value}`)
+          .join(",");
+          
         if (queryVal.length === 0) {
           setMessage("No valid Output"); 
       } else {
@@ -213,9 +208,11 @@ function TheftDetailsTable() {
 
   return (
     <div>
-       <div>
+    <h2 className="heading">Theft Details Table</h2>
+
+    <div className="container">
+      <div className="physical_filter">
         <h>Physical Filter</h>
-      {/* First Select Dropdown for Column Names */}
       <select
         value={selectedColumn}
         onChange={(e) => setSelectedColumn(e.target.value)}
@@ -228,7 +225,6 @@ function TheftDetailsTable() {
         ))}
       </select>
 
-      {/* Second Select Dropdown for Column Values */}
       {selectedColumn && (
         <select
           value={selectedValue}
@@ -243,77 +239,53 @@ function TheftDetailsTable() {
         </select>
       )}
 
-      {/* Trigger the second API call when both column and value are selected */}
       {selectedColumn && selectedValue && (
-        <button onClick={handleSecondApiCall}>Fetch Data</button>
+        <button onClick={handleSecondApiCall}>FILTER</button>
       )}
-    </div>
-
-    <div className="container">
-    
-      <h2>Theft Details Table</h2>
+      </div>
       <div className="filter-group-section">
-      <div className="filter-section">
-        <input
-          type="text"
-          placeholder="Filter Data (col1=val, col2=val...)"
-          value={filter}
-          onChange={handleFilterChange}
-          className="filter-input"
-        />
-
-        
-        <button variant="contained" color="primary" onClick={handleFilterApply}>
-          Apply Filter
-        </button>
-      </div>
-
-
-      <div className="group-by-section">
-      <button variant="outlined" onClick={() => setShowCheckboxes(!showCheckboxes)}>
-        {showCheckboxes ? "Hide Group By" : "Show Group By"}
-      </button>
-      </div>
-
-      <div className="llm-section">
-  <h4>LLM Filter</h4>
-  <input
-    placeholder="Enter Query"
-    className="query-input"
-    type="text"
-    value={query}
-    onChange={(e) => setQuery(e.target.value)}
-  />
-  <button onClick={getResponse}>Click</button>
-      </div>
+        <div className="llm-section">
+            <input
+              placeholder="Enter Query"
+              className="query-input"
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button onClick={getResponse}>GENERATE</button>
+        </div>
+        <div className="filter-section">
+          <input
+            type="text"
+            placeholder="Filter Data (col1=val, col2=val...)"
+            value={filter}
+            onChange={handleFilterChange}
+            className="filter-input"
+          />
+          <button variant="contained" color="primary" onClick={handleFilterApply}>
+            FILTER
+          </button>
+        </div>
       </div>
     </div>
 
+    <div className="checkbox-container">
+        {columns.map((column) => (
+          <label key={column} style={{ display: "block", margin: "5px 0" }}>
+            <input
+              type="checkbox"
+              checked={!!selectedColumns[column]}
+              onChange={() => handleCheckboxChange(column)}
+            />
+            {column}
+          </label>
+        ))}
+    <button variant="contained" onClick={handleGroupBy}>
+        GROUP DATA
+    </button>
+    </div>
 
-      
-      {showCheckboxes && (
-        <>
-          <div className="checkbox-container">
-            {columns.map((column) => (
-              <label key={column} style={{ display: "block", margin: "5px 0" }}>
-                <input
-                  type="checkbox"
-                  checked={!!selectedColumns[column]}
-                  onChange={() => handleCheckboxChange(column)}
-                />
-                {column}
-              </label>
-            ))}
-          </div>
-          <button variant="contained" onClick={handleGroupBy}>
-              Apply Grouping
-            </button>
-
-        </>
-      )}
       <div>
-     
-
         {message && <p>{message}</p>}    
       </div>
       <TableContainer component={Paper} style={{ marginTop: "10px" }}>
