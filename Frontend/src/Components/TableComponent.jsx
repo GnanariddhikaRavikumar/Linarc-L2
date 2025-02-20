@@ -325,7 +325,7 @@ function TheftDetailsTable() {
                 <TableCell>{row.Car_Model}</TableCell>
                 <TableCell>{row.Year_of_Manufacture}</TableCell>
                 <TableCell>{row.Location_of_Theft}</TableCell>
-                <TableCell>{row.Is_Recovered ? "Yes" : "No"}</TableCell>
+                <TableCell>{row.Is_Recovered}</TableCell>
               </TableRow>
             ))}
           </TableBody>
