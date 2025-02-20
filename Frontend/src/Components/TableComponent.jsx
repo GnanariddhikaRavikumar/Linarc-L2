@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from "react"; 
 import { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,8 +7,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
 import axios from "axios";
-// require('dotenv').config();
+
 
 function TheftDetailsTable() {
   const [theftDetails, setTheftDetails] = useState([]);
@@ -22,12 +23,14 @@ function TheftDetailsTable() {
   const [columnValues, setColumnValues] = useState([]); 
   const [selectedColumn, setSelectedColumn] = useState(''); 
   const [selectedValue, setSelectedValue] = useState(''); 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10); 
   
   useEffect(() => {
     if (querydata) {
       setfilterdata(querydata); 
     }
-  }, [querydata]); 
+  },[querydata]); 
 
   useEffect(() => {
     if (selectedColumn) {
@@ -202,6 +205,16 @@ function TheftDetailsTable() {
         console.log(queryVal);
         
     }
+  
+  //pagination
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -293,29 +306,42 @@ function TheftDetailsTable() {
           <TableHead>
             <TableRow>
               <TableCell>Case ID</TableCell>
-              {columns.map((column) => (
-                <TableCell key={column} align="right">
-                  {column}
-                </TableCell>
-              ))}
+              <TableCell>Theft Date</TableCell>
+              <TableCell>Report Date</TableCell>
+              <TableCell>Car Brand</TableCell>
+              <TableCell>Car Model</TableCell>
+              <TableCell>Year of Manufacture</TableCell>
+              <TableCell>Location of Theft</TableCell>
+              <TableCell>Is Recovered</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {theftDetails.map((row) => (
-              <TableRow key={row.case_ID}>
+            {theftDetails.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+              <TableRow key={index}>
                 <TableCell>{row.case_ID}</TableCell>
-                <TableCell align="right">{row.Theft_Date}</TableCell>
-                <TableCell align="right">{row.Report_Date}</TableCell>
-                <TableCell align="right">{row.Car_Brand}</TableCell>
-                <TableCell align="right">{row.Car_Model}</TableCell>
-                <TableCell align="right">{row.Year_of_Manufacture}</TableCell>
-                <TableCell align="right">{row.Location_of_Theft}</TableCell>
-                <TableCell align="right">{row.Is_Recovered}</TableCell>
+                <TableCell>{row.Theft_Date}</TableCell>
+                <TableCell>{row.Report_Date}</TableCell>
+                <TableCell>{row.Car_Brand}</TableCell>
+                <TableCell>{row.Car_Model}</TableCell>
+                <TableCell>{row.Year_of_Manufacture}</TableCell>
+                <TableCell>{row.Location_of_Theft}</TableCell>
+                <TableCell>{row.Is_Recovered ? "Yes" : "No"}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={theftDetails.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
       </div>
     
   );

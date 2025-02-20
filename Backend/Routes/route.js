@@ -8,5 +8,6 @@ router.get("/filterdata",cardetails.filterdata);
 router.get("/groupdata",cardetails.groupdata);
 router.get("/grouporderdata",cardetails.groupdata);
 router.get("/fieldvalue",cardetails.fieldvalue);
+router.delete("/deletecar",cardetails.deleteCarDetails);
 
 module.exports=router;

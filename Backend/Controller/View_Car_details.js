@@ -12,16 +12,15 @@ exports.addcardetails=async(req,res)=>{
     }
 }
 
-exports.viewtheftdetails = async (req, res) => {
-    try {
-        const { page = 1, limit = 10 } = req.query;
-        const offset = (page - 1) * limit;
-        const details = await car.findAll({ limit: parseInt(limit), offset: parseInt(offset) });
+exports.viewtheftdetails=async(req,res)=>{
+    try{
+        const details = await car.findAll();
         res.json(details);
-    } catch (err) {
-        res.status(500).json({ error: "Data can't be fetched" });
     }
-};
+    catch(err){
+        res.status(500).json({error:"Data can't be fetched"});
+    }
+}
 
 
 exports.filterdata=async (req, res) => {
@@ -90,5 +89,22 @@ exports.fieldvalue = async (req, res) => {
     } catch (err) {
         console.error("Error fetching distinct values:", err);
         res.status(500).json({ error: "Data can't be fetched" });
+    }
+};
+
+
+//delete
+exports.deleteCarDetails = async (req, res) => {
+    try {
+        const { case_ID } = req.params;
+        const deletedCar = await car.destroy({ where: { case_ID } });
+
+        if (deletedCar) {
+            res.status(200).json({ message: "Theft Details of car deleted successfully" });
+        } else {
+            res.status(404).json({ error: "Car theft details not found" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: "Can't delete the details" });
     }
 };
